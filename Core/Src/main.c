@@ -60,7 +60,16 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+volatile uint32_t t = 0;
+float voltage = 0.0f;
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+    if(hadc->Instance == ADC1) //check if the interrupt comes from ACD1
+    {
+        t = HAL_ADC_GetValue(&hadc1);
+        voltage = 5.0f * t / 4096.0f;
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -100,6 +109,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  HAL_ADC_Start_IT(&hadc1);
+  HAL_TIM_Base_Start(&htim3);
+
   while (1)
   {
     /* USER CODE END WHILE */
