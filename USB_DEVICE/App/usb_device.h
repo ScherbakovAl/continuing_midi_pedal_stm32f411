@@ -56,7 +56,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+ void MidiSender(uint32_t c);
 /* USER CODE END PFP */
 
 /*

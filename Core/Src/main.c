@@ -67,6 +67,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
     if(hadc->Instance == ADC1) //check if the interrupt comes from ACD1
     {
         t = HAL_ADC_GetValue(&hadc1);
+        MidiSender(t);
         voltage = 5.0f * t / 4096.0f;
     }
 }
