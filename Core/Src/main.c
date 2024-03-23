@@ -60,15 +60,19 @@ static void MX_TIM3_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-volatile uint32_t t = 0;
-float voltage = 0.0f;
+int32_t t = 0;
+int32_t p = 0;
+
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-    if(hadc->Instance == ADC1) //check if the interrupt comes from ACD1
+    if(hadc->Instance == ADC1)
     {
         t = HAL_ADC_GetValue(&hadc1);
-        MidiSender(t);
-        voltage = 5.0f * t / 4096.0f;
+        if(t - p > 12 || p - t > 12)
+        {
+        	MidiSender(t);
+        	p = t;
+        }
     }
 }
 /* USER CODE END 0 */

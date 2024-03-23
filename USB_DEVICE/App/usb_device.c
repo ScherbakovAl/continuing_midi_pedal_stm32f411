@@ -48,27 +48,22 @@ USBD_HandleTypeDef hUsbDeviceFS;
  */
 /* USER CODE BEGIN 0 */
 USBD_CDC_HandleTypeDef *hcdcdc;
-uint8_t p = 0;
 uint8_t u = 0;
+uint8_t r = 0;
+uint8_t buf[4];
 
 void MidiSender(uint32_t c) {
-	u = c / 31 - 5;
-	if (p != u) {
-		uint8_t buf[8];
+	u = c / 31 - 6;
+	if(r != u){
 		if (hcdcdc->TxState == 0) { //(0==свободно, !0==занято)
-			buf[0] = 9; // ??
-			buf[1] = 176; // 176 (for hi-res midi)
-			buf[2] = 64; // 88 (for hi-res midi)
-			buf[3] = u; // 32,251968 //n.lo; // velocity xx.75
-
-//			buf[4] = 9; // ?
-//			buf[5] = 128; //uint8_t(n.mO); // 0x90(144) - note on, 0x80(128) - note off
-//			buf[6] = 55; //n.note; // number note
-//			buf[7] = 36; //n.hi; // velocity 86.xx
+			buf[0] = 9;
+			buf[1] = 176;
+			buf[2] = 64;
+			buf[3] = u;
 
 			USBD_CDC_SetTxBuffer(&hUsbDeviceFS, buf, 4);
 			USBD_CDC_TransmitPacket(&hUsbDeviceFS);
-			p = u;
+			r = u;
 		}
 	}
 }
@@ -125,8 +120,6 @@ void MX_USB_DEVICE_Init(void) {
 	CDC_Transmit_FS(txbuf, 8);
 	HAL_Delay(100);
 	CDC_Transmit_FS(txbuf, 8);
-
-	GPIOE->BSRR = 0x80000;
 
 	hcdcdc = (USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData; // свободно для отправки? "if (hcdcdc->TxState == ...)"; (0==свободно, !0==занято)
 	/* USER CODE END USB_DEVICE_Init_PostTreatment */
