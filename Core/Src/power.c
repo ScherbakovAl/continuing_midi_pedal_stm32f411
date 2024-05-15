@@ -31,8 +31,11 @@ pwr(){
 			ssd1306_UpdateScreen();
 			HAL_Delay(200);
 		} else {
-//			__HAL_RTC_ALARM
-//			RTC_ClearITPendingBit(RTC_IT_SEC|RTC_IT_OW);
+
+//			__HAL_RTC_
+//			RTC_ClearITPendingBit(RTC_IT_WUT|RTC_IT_TS);
+//			RTC_ClearFlag(RTC_FLAG_SEC);
+
 			ssd1306_Fill(Black);
 			ssd1306_SetCursor(10, 20);
 			ssd1306_WriteString("STANDBY..2", Font_16x15, White);
