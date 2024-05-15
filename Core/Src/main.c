@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "i2c.h"
+#include "rtc.h"
 #include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -29,6 +30,7 @@
 #include <stdio.h>
 #include "ssd1306.h"
 #include <string.h>
+#include "power.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -63,9 +65,10 @@ void SystemClock_Config(void);
 int32_t t = 0;
 int32_t p = 0;
 char text[] = "XXXXXXXXXXXX";
+int f = 0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-    if(hadc->Instance == ADC1)
+    if(f == 1 && hadc->Instance == ADC1)
     {
         t = HAL_ADC_GetValue(&hadc1);
         if(t - p > 12 || p - t > 12)
@@ -75,7 +78,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
         }
         sprintf(text, "%d", t);
         ssd1306_Fill(Black);
-        ssd1306_SetCursor(20, 20);
+        ssd1306_SetCursor(20, 40);
         ssd1306_WriteString(text, Font_16x15, White);
         ssd1306_UpdateScreen();
     }
@@ -115,12 +118,16 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_I2C2_Init();
   MX_TIM2_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	HAL_ADC_Start_IT(&hadc1);
+	HAL_TIM_Base_Start(&htim3);
+
 	ssd1306_Init();
 	ssd1306_Fill(Black);
 	ssd1306_SetCursor(20, 20);
@@ -128,20 +135,27 @@ int main(void)
 	ssd1306_UpdateScreen();
 	HAL_Delay(200);
 
-	HAL_ADC_Start(&hadc1);
-	HAL_ADC_PollForConversion(&hadc1, 1);
 	int val = HAL_ADC_GetValue(&hadc1);
-
 	ssd1306_Fill(Black);
-	sprintf(text, "%04d", val);
-	ssd1306_SetCursor(40, 0);
+	sprintf(text, "%d", val);
+	ssd1306_SetCursor(20, 20);
 	ssd1306_WriteString(text, Font_16x15, White);
+	ssd1306_UpdateScreen();
+	HAL_Delay(1000);
+
+	ssd1306_Init();
+	ssd1306_Fill(Black);
+	ssd1306_SetCursor(20, 20);
+	ssd1306_WriteString("Hello", Font_16x15, White);
 	ssd1306_UpdateScreen();
 	HAL_Delay(200);
 
 
-  HAL_ADC_Start_IT(&hadc1);
-  HAL_TIM_Base_Start(&htim3);
+	pwr();
+
+	f = 1;
+
+//	MX_USB_DEVICE_Init();
 
   while (1)
   {
@@ -169,8 +183,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 12;
