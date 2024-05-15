@@ -26,7 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "ssd1306.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,7 +62,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 int32_t t = 0;
 int32_t p = 0;
-
+char text[] = "XXXXXXXXXXXX";
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if(hadc->Instance == ADC1)
@@ -71,6 +73,11 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
         	MidiSender(t);
         	p = t;
         }
+        sprintf(text, "%d", t);
+        ssd1306_Fill(Black);
+        ssd1306_SetCursor(20, 20);
+        ssd1306_WriteString(text, Font_16x15, White);
+        ssd1306_UpdateScreen();
     }
 }
 /* USER CODE END 0 */
@@ -114,6 +121,13 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	ssd1306_Init();
+	ssd1306_Fill(Black);
+	ssd1306_SetCursor(20, 20);
+	ssd1306_WriteString("Hello", Font_16x15, White);
+	ssd1306_UpdateScreen();
+	HAL_Delay(200);
+
   HAL_ADC_Start_IT(&hadc1);
   HAL_TIM_Base_Start(&htim3);
 
