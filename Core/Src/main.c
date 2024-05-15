@@ -128,6 +128,18 @@ int main(void)
 	ssd1306_UpdateScreen();
 	HAL_Delay(200);
 
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, 1);
+	int val = HAL_ADC_GetValue(&hadc1);
+
+	ssd1306_Fill(Black);
+	sprintf(text, "%04d", val);
+	ssd1306_SetCursor(40, 0);
+	ssd1306_WriteString(text, Font_16x15, White);
+	ssd1306_UpdateScreen();
+	HAL_Delay(200);
+
+
   HAL_ADC_Start_IT(&hadc1);
   HAL_TIM_Base_Start(&htim3);
 
