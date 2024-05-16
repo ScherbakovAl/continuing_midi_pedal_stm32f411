@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
-#include "i2c.h"
 #include "rtc.h"
 #include "tim.h"
 #include "usb_device.h"
@@ -64,6 +63,7 @@ int32_t p = 0;
 int f = 0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
+	GPIOA->BSRR = 0x4; //for test
     if(f == 1 && hadc->Instance == ADC1)
     {
         t = HAL_ADC_GetValue(&hadc1);
@@ -73,6 +73,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
         	p = t;
         }
     }
+    GPIOA->BSRR = 0x40000; //for test
 }
 /* USER CODE END 0 */
 
@@ -106,7 +107,6 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_TIM3_Init();
-  MX_I2C2_Init();
   MX_TIM2_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
@@ -117,7 +117,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	HAL_ADC_Start_IT(&hadc1);
 	HAL_TIM_Base_Start(&htim3);
-	HAL_Delay(200);
+	HAL_TIM_Base_Start_IT(&htim2);
+	HAL_Delay(20);
 	pwr();
 	MX_USB_DEVICE_Init();
 	f = 1;
