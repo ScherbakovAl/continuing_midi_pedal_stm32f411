@@ -5,3 +5,5 @@
 ![url=https://ibb.co/X2f05P6](https://i.ibb.co/tmwj26n/IMG-20240324-003515.jpg)
 
 ![url=https://ibb.co/grSZnkQ](https://i.ibb.co/6yH0djG/image.png)
+
+upd: 16.05.2024 add STANDBYMode
