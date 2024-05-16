@@ -115,7 +115,6 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_TIM3_Init();
-  MX_USB_DEVICE_Init();
   MX_I2C2_Init();
   MX_TIM2_Init();
   MX_RTC_Init();
@@ -133,26 +132,27 @@ int main(void)
 	ssd1306_SetCursor(20, 20);
 	ssd1306_WriteString("Hello", Font_16x15, White);
 	ssd1306_UpdateScreen();
-	HAL_Delay(200);
+//	HAL_Delay(200);
 
-	int val = HAL_ADC_GetValue(&hadc1);
-	ssd1306_Fill(Black);
-	sprintf(text, "%d", val);
-	ssd1306_SetCursor(20, 20);
-	ssd1306_WriteString(text, Font_16x15, White);
-	ssd1306_UpdateScreen();
-	HAL_Delay(1000);
-
-	ssd1306_Init();
-	ssd1306_Fill(Black);
-	ssd1306_SetCursor(20, 20);
-	ssd1306_WriteString("Hello", Font_16x15, White);
-	ssd1306_UpdateScreen();
-	HAL_Delay(200);
+//	int val = HAL_ADC_GetValue(&hadc1);
+//	ssd1306_Fill(Black);
+//	sprintf(text, "%d", val);
+//	ssd1306_SetCursor(20, 20);
+//	ssd1306_WriteString(text, Font_16x15, White);
+//	ssd1306_UpdateScreen();
+//	HAL_Delay(1000);
+//
+//	ssd1306_Init();
+//	ssd1306_Fill(Black);
+//	ssd1306_SetCursor(20, 20);
+//	ssd1306_WriteString("Hello", Font_16x15, White);
+//	ssd1306_UpdateScreen();
+//	HAL_Delay(200);
 
 
 	pwr();
 
+	MX_USB_DEVICE_Init();
 	f = 1;
 
 //	MX_USB_DEVICE_Init();
