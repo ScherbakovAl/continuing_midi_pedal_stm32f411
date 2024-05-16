@@ -27,9 +27,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include "ssd1306.h"
-#include <string.h>
 #include "power.h"
 /* USER CODE END Includes */
 
@@ -64,7 +61,6 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 int32_t t = 0;
 int32_t p = 0;
-char text[] = "XXXXXXXXXXXX";
 int f = 0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
@@ -76,11 +72,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
         	MidiSender(t);
         	p = t;
         }
-        sprintf(text, "%d", t);
-        ssd1306_Fill(Black);
-        ssd1306_SetCursor(20, 40);
-        ssd1306_WriteString(text, Font_16x15, White);
-        ssd1306_UpdateScreen();
     }
 }
 /* USER CODE END 0 */
@@ -126,36 +117,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	HAL_ADC_Start_IT(&hadc1);
 	HAL_TIM_Base_Start(&htim3);
-
-	ssd1306_Init();
-	ssd1306_Fill(Black);
-	ssd1306_SetCursor(20, 20);
-	ssd1306_WriteString("Hello", Font_16x15, White);
-	ssd1306_UpdateScreen();
-//	HAL_Delay(200);
-
-//	int val = HAL_ADC_GetValue(&hadc1);
-//	ssd1306_Fill(Black);
-//	sprintf(text, "%d", val);
-//	ssd1306_SetCursor(20, 20);
-//	ssd1306_WriteString(text, Font_16x15, White);
-//	ssd1306_UpdateScreen();
-//	HAL_Delay(1000);
-//
-//	ssd1306_Init();
-//	ssd1306_Fill(Black);
-//	ssd1306_SetCursor(20, 20);
-//	ssd1306_WriteString("Hello", Font_16x15, White);
-//	ssd1306_UpdateScreen();
-//	HAL_Delay(200);
-
-
+	HAL_Delay(200);
 	pwr();
-
 	MX_USB_DEVICE_Init();
 	f = 1;
-
-//	MX_USB_DEVICE_Init();
 
   while (1)
   {
