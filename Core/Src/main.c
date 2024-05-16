@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -61,20 +61,17 @@ void SystemClock_Config(void);
 int32_t t = 0;
 int32_t p = 0;
 int f = 0;
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
-{
-	GPIOA->BSRR = 0x4; //for test
-    if(f == 1 && hadc->Instance == ADC1)
-    {
-        t = HAL_ADC_GetValue(&hadc1);
-        if(t - p > 12 || p - t > 12)
-        {
-        	MidiSender(t);
-        	p = t;
-        }
-    }
-    GPIOA->BSRR = 0x40000; //for test
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+	if (f == 1 && hadc->Instance == ADC1) {
+		t = HAL_ADC_GetValue(&hadc1);
+		if (t - p > 12 || p - t > 12) {
+			MidiSender(t);
+			p = t;
+			TIM2->CNT = 0;
+		}
+	}
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -117,18 +114,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	HAL_ADC_Start_IT(&hadc1);
 	HAL_TIM_Base_Start(&htim3);
-	HAL_TIM_Base_Start_IT(&htim2);
-	HAL_Delay(20);
+	HAL_Delay(15);
 	pwr();
 	MX_USB_DEVICE_Init();
+	HAL_TIM_Base_Start_IT(&htim2);
 	f = 1;
 
-  while (1)
-  {
+	while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -189,11 +185,10 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 

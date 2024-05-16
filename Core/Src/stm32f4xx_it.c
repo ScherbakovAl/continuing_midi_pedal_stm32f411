@@ -232,6 +232,7 @@ void ADC_IRQHandler(void)
 /**
   * @brief This function handles TIM2 global interrupt.
   */
+extern int f;
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
@@ -239,8 +240,13 @@ void TIM2_IRQHandler(void)
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */
-  GPIOA->BSRR |= 0x8; //for test
-  GPIOA->BSRR |= 0x80000; //for test
+	if (f) {
+		HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN1);
+		__HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
+		__HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
+		HAL_PWR_EnableWakeUpPin(PWR_WAKEUP_PIN1);
+		HAL_PWR_EnterSTANDBYMode();
+	}
   /* USER CODE END TIM2_IRQn 1 */
 }
 
