@@ -64,10 +64,12 @@ int f = 0;
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 	if (f == 1 && hadc->Instance == ADC1) {
 		t = HAL_ADC_GetValue(&hadc1);
-		if (t - p > 12 || p - t > 12) {
-			MidiSender(t);
+		if (t < 300){
+			t = 300;
+		}
+		if (t - p > 14 || p - t > 14) {
+			MidiSender((uint32_t)t);
 			p = t;
-			TIM2->CNT = 0;
 		}
 	}
 }

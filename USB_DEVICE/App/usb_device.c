@@ -53,7 +53,7 @@ uint8_t r = 0;
 uint8_t buf[4];
 
 void MidiSender(uint32_t c) {
-	u = c / 31 - 6;
+	u = c / 30 - 9;
 	if(r != u){
 		if (hcdcdc->TxState == 0) { //(0==свободно, !0==занято)
 			buf[0] = 9;
@@ -64,6 +64,7 @@ void MidiSender(uint32_t c) {
 			USBD_CDC_SetTxBuffer(&hUsbDeviceFS, buf, 4);
 			USBD_CDC_TransmitPacket(&hUsbDeviceFS);
 			r = u;
+			TIM2->CNT = 0;
 		}
 	}
 }
