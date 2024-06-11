@@ -121,6 +121,7 @@ int main(void)
 	MX_USB_DEVICE_Init();
 	HAL_TIM_Base_Start_IT(&htim2);
 	f = 1;
+	GPIOC->BSRR = 0x20000000;
 
 	while (1) {
     /* USER CODE END WHILE */
