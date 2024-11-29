@@ -217,7 +217,7 @@ void EXTI0_IRQHandler(void) {
 	EXTI->PR = extpr0;
 	EXTI->IMR &= ~(EXTI_IMR_MR0);
 	dequePedals.push_back( { pedal::a, TIM5->CNT });
-	MidiSender2(0, 55, 11);
+	MidiSender2(1, 50, 11);
 	GPIOC->BSRR = 0x2000;
 }
 
@@ -225,7 +225,7 @@ void EXTI1_IRQHandler(void) {
 	EXTI->PR = extpr1;
 	EXTI->IMR &= ~(EXTI_IMR_MR1);
 	dequePedals.push_back( { pedal::b, TIM5->CNT });
-	MidiSender2(0, 55, 22);
+	MidiSender2(1, 51, 22);
 	GPIOC->BSRR = 0x2000;
 }
 
@@ -233,7 +233,7 @@ void EXTI2_IRQHandler(void) {
 	EXTI->PR = extpr2;
 	EXTI->IMR &= ~(EXTI_IMR_MR2);
 	dequePedals.push_back( { pedal::c, TIM5->CNT });
-	MidiSender2(1, 55, 33);
+	MidiSender2(2, 60, 33);
 	GPIOC->BSRR = 0x2000;
 }
 
@@ -241,7 +241,7 @@ void EXTI3_IRQHandler(void) {
 	EXTI->PR = extpr3;
 	EXTI->IMR &= ~(EXTI_IMR_MR3);
 	dequePedals.push_back( { pedal::d, TIM5->CNT });
-	MidiSender2(1, 55, 44);
+	MidiSender2(2, 61, 44);
 	GPIOC->BSRR = 0x2000;
 }
 }
