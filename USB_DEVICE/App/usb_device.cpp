@@ -54,7 +54,7 @@ uint8_t buf[4];
 
 void MidiSender(uint32_t c) {
 	u = c / 30 - 9;
-	if(r != u){
+	if (r != u) {
 		if (hcdcdc->TxState == 0) { //(0==свободно, !0==занято)
 			buf[0] = 9;
 			buf[1] = 176;
@@ -68,6 +68,20 @@ void MidiSender(uint32_t c) {
 		}
 	}
 }
+
+void MidiSender2(int ch, int n, uint32_t u) {
+			buf[0] = 9;
+			buf[1] = 144 + ch;
+			buf[2] = (uint8_t) n; //64
+			buf[3] = (uint8_t) u;
+
+		if (hcdcdc->TxState == 0) { //(0==свободно, !0==занято)
+			USBD_CDC_SetTxBuffer(&hUsbDeviceFS, buf, 4);
+			USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+			TIM2->CNT = 0;
+		}
+}
+
 /* USER CODE END 0 */
 
 /*
